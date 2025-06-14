@@ -1,0 +1,24 @@
+{
+  "timestamp": "2025-06-14T16:20:15.459583",
+  "filename": "violation_20250614_162015_458.jpg",
+  "violation_data": {
+    "person": {
+      "bbox": [
+        108,
+        94,
+        363,
+        476
+      ],
+      "confidence": 0.6629363298416138,
+      "class": "person",
+      "class_id": 0
+    },
+    "equipment": [],
+    "missing_equipment": [
+      "hard_hat",
+      "safety_vest"
+    ],
+    "is_compliant": false,
+    "compliance_score": 0.0
+  }
+}
