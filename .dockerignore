@@ -61,6 +61,13 @@ SafetyMasterPro_*/
 # Zip files
 *.zip
 
-# Large model files that will be downloaded
-# (comment out if you want to include pre-downloaded models)
-# *.pt 
+# Large model files - exclude to reduce upload time
+# Models will be downloaded automatically during deployment
+*.pt
+ppe_yolov8_model_0.pt
+ppe_model.pt
+yolov8n.pt
+
+# Violation captures (not needed in deployment)
+violation_captures/
+captures/ 
