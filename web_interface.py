@@ -2,23 +2,24 @@
 """
 Advanced Safety Monitor Web Interface
 Real-time safety equipment detection with web dashboard
+Optimized for Railway cloud deployment
 """
 
 import cv2
 import base64
 import json
 import time
+import os
 from flask import Flask, render_template, jsonify, request
 from flask_socketio import SocketIO, emit
 import threading
 from datetime import datetime
-import os
 
 from safety_detector import SafetyDetector
 from camera_manager import CameraManager
 
 app = Flask(__name__)
-app.config['SECRET_KEY'] = 'safety_monitor_secret_key'
+app.config['SECRET_KEY'] = os.environ.get('SECRET_KEY', 'safety_monitor_secret_key')
 socketio = SocketIO(app, cors_allowed_origins="*", async_mode='threading')
 
 # Global variables
@@ -113,6 +114,16 @@ def process_video_stream():
 def dashboard():
     """Serve the main dashboard."""
     return render_template('dashboard.html')
+
+@app.route('/health')
+def health_check():
+    """Health check endpoint for Railway."""
+    return jsonify({
+        'status': 'healthy',
+        'service': 'SafetyMaster Pro',
+        'timestamp': datetime.now().isoformat(),
+        'detector_loaded': detector is not None
+    })
 
 @app.route('/test')
 def test_page():
@@ -297,16 +308,20 @@ def main():
         print("❌ Failed to initialize components")
         return
     
+    # Get port from environment variable (Railway sets this)
+    port = int(os.environ.get('PORT', 8080))
+    host = '0.0.0.0'  # Required for Railway
+    
     print("🚀 Starting Safety Monitor Web Application...")
-    print("   Access dashboard at: http://localhost:8080")
+    print(f"   Running on: http://{host}:{port}")
     print("   Press Ctrl+C to stop")
     
     try:
         socketio.run(app, 
-                    host='0.0.0.0', 
-                    port=8080, 
-                    debug=True, 
-                    use_reloader=True,
+                    host=host, 
+                    port=port, 
+                    debug=False,  # Disable debug in production
+                    use_reloader=False,  # Disable reloader in production
                     allow_unsafe_werkzeug=True)
     except KeyboardInterrupt:
         print("\n🛑 Shutting down Safety Monitor...")

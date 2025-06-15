@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>WebSocket Video Test</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.7.2/socket.io.js"></script>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; }
+        #videoFeed { border: 2px solid #ccc; min-height: 200px; padding: 10px; }
+        .controls { margin: 20px 0; }
+        .status { padding: 10px; margin: 10px 0; border-radius: 5px; }
+        .connected { background: #d4edda; border: 1px solid #c3e6cb; }
+        .disconnected { background: #f8d7da; border: 1px solid #f5c6cb; }
+        img { max-width: 100%; height: auto; }
+    </style>
+</head>
+<body>
+    <h1>WebSocket Video Streaming Test</h1>
+    
+    <div id="status" class="status disconnected">Disconnected</div>
+    
+    <div class="controls">
+        <button onclick="startMonitoring()">Start Monitoring</button>
+        <button onclick="stopMonitoring()">Stop Monitoring</button>
+    </div>
+    
+    <div>
+        <h3>Video Feed:</h3>
+        <div id="videoFeed">No video feed</div>
+    </div>
+    
+    <div>
+        <h3>Statistics:</h3>
+        <div id="stats">No data</div>
+    </div>
+    
+    <div>
+        <h3>Console Log:</h3>
+        <div id="console" style="background: #f5f5f5; padding: 10px; max-height: 200px; overflow-y: auto;"></div>
+    </div>
+
+    <script>
+        const socket = io();
+        const statusDiv = document.getElementById('status');
+        const videoFeed = document.getElementById('videoFeed');
+        const statsDiv = document.getElementById('stats');
+        const consoleDiv = document.getElementById('console');
+        
+        let frameCount = 0;
+        
+        function log(message) {
+            const time = new Date().toLocaleTimeString();
+            consoleDiv.innerHTML += `<div>[${time}] ${message}</div>`;
+            consoleDiv.scrollTop = consoleDiv.scrollHeight;
+            console.log(message);
+        }
+        
+        socket.on('connect', function() {
+            log('✅ Connected to server');
+            statusDiv.textContent = 'Connected';
+            statusDiv.className = 'status connected';
+        });
+        
+        socket.on('disconnect', function() {
+            log('❌ Disconnected from server');
+            statusDiv.textContent = 'Disconnected';
+            statusDiv.className = 'status disconnected';
+        });
+        
+        socket.on('video_frame', function(data) {
+            frameCount++;
+            log(`📹 Received video frame #${frameCount}`);
+            
+            // Display frame
+            const img = new Image();
+            img.onload = function() {
+                videoFeed.innerHTML = '';
+                videoFeed.appendChild(img);
+            };
+            img.src = 'data:image/jpeg;base64,' + data.frame;
+            
+            // Display stats
+            statsDiv.innerHTML = `
+                <div>People: ${data.people_count || 0}</div>
+                <div>Violations: ${(data.violations || []).length}</div>
+                <div>FPS: ${data.fps || 0}</div>
+                <div>Equipment: ${JSON.stringify(data.safety_equipment || {})}</div>
+            `;
+        });
+        
+        socket.on('status', function(data) {
+            log(`🔄 Status update: ${JSON.stringify(data)}`);
+        });
+        
+        function startMonitoring() {
+            log('🚀 Starting monitoring...');
+            fetch('/api/start_monitoring', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ camera_source: 0 })
+            })
+            .then(response => response.json())
+            .then(data => {
+                log(`✅ Start response: ${JSON.stringify(data)}`);
+            })
+            .catch(error => {
+                log(`❌ Start error: ${error}`);
+            });
+        }
+        
+        function stopMonitoring() {
+            log('🛑 Stopping monitoring...');
+            fetch('/api/stop_monitoring', { method: 'POST' })
+            .then(response => response.json())
+            .then(data => {
+                log(`✅ Stop response: ${JSON.stringify(data)}`);
+                videoFeed.innerHTML = 'No video feed';
+                statsDiv.innerHTML = 'No data';
+            })
+            .catch(error => {
+                log(`❌ Stop error: ${error}`);
+            });
+        }
+        
+        log('🔧 WebSocket test page loaded');
+    </script>
+</body>
+</html> 

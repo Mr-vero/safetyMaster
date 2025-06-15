@@ -1,0 +1,39 @@
+version: '3.8'
+
+services:
+  safetymaster-pro:
+    build: .
+    container_name: safetymaster-pro
+    ports:
+      - "8080:8080"
+    devices:
+      - /dev/video0:/dev/video0  # Camera access (Linux)
+    volumes:
+      - ./violation_captures:/app/violation_captures
+      - ./captures:/app/captures
+    environment:
+      - PYTHONUNBUFFERED=1
+      - FLASK_ENV=production
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8080/"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+
+  # Optional: Add a reverse proxy for production
+  nginx:
+    image: nginx:alpine
+    container_name: safetymaster-nginx
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./nginx.conf:/etc/nginx/nginx.conf:ro
+      - ./ssl:/etc/nginx/ssl:ro
+    depends_on:
+      - safetymaster-pro
+    restart: unless-stopped
+    profiles:
+      - production 

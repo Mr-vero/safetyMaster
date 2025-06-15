@@ -1,0 +1,31 @@
+#!/bin/bash
+# SafetyMaster Pro - Mac App Bundle Launcher
+
+# Get the app bundle directory
+APP_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )/.." && pwd )"
+RESOURCES_DIR="$APP_DIR/Contents/Resources"
+
+# Change to resources directory
+cd "$RESOURCES_DIR"
+
+# Check if Python 3 is installed
+if ! command -v python3 &> /dev/null; then
+    osascript -e 'display dialog "Python 3 is required but not installed.\n\nPlease install Python 3.8+ from:\nhttps://www.python.org/downloads/macos/\n\nOr install using Homebrew:\nbrew install python3" with title "SafetyMaster Pro - Python Required" buttons {"OK"} default button "OK" with icon caution'
+    exit 1
+fi
+
+# Install dependencies silently
+python3 -m pip install --user -r requirements.txt > /dev/null 2>&1
+
+# Start the application
+python3 web_interface.py &
+
+# Wait a moment then open browser
+sleep 3
+open http://localhost:8080
+
+# Show success message
+osascript -e 'display dialog "SafetyMaster Pro is starting!\n\nThe web interface will open in your browser at:\nhttp://localhost:8080\n\nMake sure your camera is connected." with title "SafetyMaster Pro Started" buttons {"OK"} default button "OK" with icon note'
+
+# Keep the process running
+wait

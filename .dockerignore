@@ -1,0 +1,66 @@
+# Git and version control
+.git
+.gitignore
+*.md
+
+# Python cache and virtual environments
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.Python
+safety_monitor_env/
+venv/
+env/
+ENV/
+
+# IDE and editor files
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS generated files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# Logs and temporary files
+*.log
+*.tmp
+*.temp
+
+# Build artifacts
+build/
+dist/
+*.egg-info/
+
+# Documentation (not needed in container)
+*.md
+docs/
+
+# Test files (not needed in production)
+test_*.py
+*_test.py
+tests/
+
+# Development scripts
+create_*.py
+build_*.py
+
+# Mac app bundles
+*.app/
+SafetyMaster*.app/
+SafetyMasterPro_*/
+
+# Zip files
+*.zip
+
+# Large model files that will be downloaded
+# (comment out if you want to include pre-downloaded models)
+# *.pt 
