@@ -1,0 +1,23 @@
+# Manual Railway Deployment Commands
+# Run these one by one in your terminal:
+
+# 1. Exit virtual environment (Railway CLI works better outside venv)
+deactivate
+
+# 2. Navigate to project directory
+cd /Users/whitmanwendelken/Reza/safetyMaster
+
+# 3. Login to Railway (if not already logged in)
+railway login
+
+# 4. Create new project
+railway init
+
+# 5. Deploy your app
+railway up
+
+# 6. Open your deployed app
+railway open
+
+# 7. View logs (if needed)
+railway logs --follow 
