@@ -1,0 +1,71 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+
+# Virtual environments
+safety_monitor_env/
+venv/
+env/
+ENV/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# Logs
+*.log
+
+# Mac App bundles - EXCLUDE FROM GIT
+*.app/
+SafetyMaster*.app/
+SafetyMasterPro_*/
+
+# Zip files and archives - EXCLUDE FROM GIT
+*.zip
+*.tar.gz
+*.rar
+*.7z
+
+# Large model files (will be downloaded)
+# Uncomment to exclude from git:
+# *.pt
+# ppe_yolov8_model_0.pt
+# ppe_model.pt
+# yolov8n.pt
+
+# Violation captures
+violation_captures/
+captures/
+
+# Temporary files
+*.tmp
+*.temp 

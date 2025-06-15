@@ -1,7 +1,6 @@
 # Git and version control
 .git
 .gitignore
-*.md
 
 # Python cache and virtual environments
 __pycache__/
@@ -40,26 +39,41 @@ build/
 dist/
 *.egg-info/
 
-# Documentation (not needed in container)
+# Documentation files (keep only essential ones)
 *.md
 docs/
+!README.md
 
 # Test files (not needed in production)
 test_*.py
 *_test.py
 tests/
+high_fps_test.py
+test_improved_detection.py
+test_mask_detection.py
+test_websocket.html
+test_camera.py
+test_ppe_detector.py
 
-# Development scripts
+# Development and build scripts
 create_*.py
 build_*.py
+setup.py
+pyproject.toml
+MANIFEST.in
 
-# Mac app bundles
+# Mac app bundles and packages - EXCLUDE COMPLETELY
 *.app/
 SafetyMaster*.app/
 SafetyMasterPro_*/
+SafetyMasterPro_v*/
 
-# Zip files
+# Zip files and archives - EXCLUDE COMPLETELY
 *.zip
+*.tar.gz
+*.rar
+*.7z
+SafetyMasterPro_*.zip
 
 # Large model files - exclude to reduce upload time
 # Models will be downloaded automatically during deployment
@@ -70,4 +84,13 @@ yolov8n.pt
 
 # Violation captures (not needed in deployment)
 violation_captures/
-captures/ 
+captures/
+
+# Demo and example files
+demo.py
+demo_simple.py
+start_safety_monitor.sh
+
+# Deployment scripts (not needed in container)
+deploy*.sh
+manual_deploy_commands.txt 
